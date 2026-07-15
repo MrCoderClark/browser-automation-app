@@ -1,5 +1,10 @@
-import { UserButton } from "@clerk/nextjs"
+import { UserButton, OrganizationSwitcher } from "@clerk/nextjs"
 
 export default function Page() {
-  return <UserButton />
+  return (
+    <>
+      <UserButton />
+      <OrganizationSwitcher hidePersonal />
+    </>
+  )
 }
