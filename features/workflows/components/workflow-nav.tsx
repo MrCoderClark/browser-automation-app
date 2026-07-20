@@ -3,6 +3,8 @@
 import { SidebarContent, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarSeparator, useSidebar } from "@/components/ui/sidebar"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { PlusIcon, WorkflowIcon } from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import type { Workflow } from "@/lib/db/schema"
 import React from "react"
 import { generateSlug } from "../lib/generate-slug"
@@ -15,6 +17,7 @@ interface WorkflowNavProps {
 
 export function WorkflowNav({ workflows, onCreateWorkflow }: WorkflowNavProps) {
     const { state } = useSidebar()
+    const pathname = usePathname()
     const [isPending, startTransition] = React.useTransition()
 
     const handleCreateWorkflow = () => {
@@ -23,13 +26,18 @@ export function WorkflowNav({ workflows, onCreateWorkflow }: WorkflowNavProps) {
         })
     }
 
-    const workflowItems = workflows.map((workflow) => (
-        <SidebarMenuItem key={workflow.id}>
-            <SidebarMenuButton>
-                <span>{workflow.name}</span>
-            </SidebarMenuButton>
-        </SidebarMenuItem>
-    ))
+    const workflowItems = workflows.map((workflow) => {
+        const href = `/workflows/${workflow.id}`
+        return (
+            <SidebarMenuItem key={workflow.id}>
+                <SidebarMenuButton asChild isActive={pathname === href}>
+                    <Link href={href}>
+                        <span>{workflow.name}</span>
+                    </Link>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+        )
+    })
 
 
     if (state === "collapsed") {
